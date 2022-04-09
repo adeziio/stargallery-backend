@@ -6,7 +6,7 @@ var dotenv = require('dotenv').config();
 
 // GET
 router.get('/listGallery', (req, res) => {
-    res.header('Access-Control-Allow-Origin', dotenv.parsed.STARGALLERY_URL);
+    res.header('Access-Control-Allow-Origin', process.env.STARGALLERY_URL || dotenv.parsed.STARGALLERY_URL);
     res.json({
         status: "Success"
     });
@@ -14,7 +14,7 @@ router.get('/listGallery', (req, res) => {
 
 // POST
 router.post('/upload', (req, res) => {
-    res.header('Access-Control-Allow-Origin', dotenv.parsed.STARGALLERY_URL);
+    res.header('Access-Control-Allow-Origin', process.env.STARGALLERY_URL || dotenv.parsed.STARGALLERY_URL);
 
     // if (req.body.item) {
     //     Data.add(req.body.item);
