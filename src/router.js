@@ -1,15 +1,21 @@
-const express = require('express');
-const Data = require('./data');
-const router = express.Router();
-const jsonParser = express.json();
+var express = require('express');
+var Data = require('./data');
+var router = express.Router();
+var jsonParser = express.json();
+var dotenv = require('dotenv').config();
 
 // GET
 router.get('/listGallery', (req, res) => {
-
+    res.header('Access-Control-Allow-Origin', dotenv.parsed.STARGALLERY_URL);
+    res.json({
+        status: "Success"
+    });
 })
 
 // POST
 router.post('/upload', (req, res) => {
+    res.header('Access-Control-Allow-Origin', dotenv.parsed.STARGALLERY_URL);
+
     // if (req.body.item) {
     //     Data.add(req.body.item);
     //     res.json({
@@ -26,5 +32,8 @@ router.post('/upload', (req, res) => {
         status: "Success"
     });
 })
+
+// res.header('Access-Control-Allow-Methods', 'POST');
+// res.header('Access-Control-Allow-Headers', 'Content-Type');
 
 module.exports = router;
