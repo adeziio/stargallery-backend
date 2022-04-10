@@ -53,6 +53,8 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 // Extract the file from key
 router.get('/extract', async (req, res) => {
     res.header('Access-Control-Allow-Origin', process.env.STARGALLERY_URL || dotenv.parsed.STARGALLERY_URL)
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    res.header('Access-Control-Allow-Headers', 'Content-Type')
 
     var result = await extractFile(req.query.key)
     if (result) {
