@@ -40,26 +40,26 @@ router.get('/gallery', async (req, res) => {
 })
 
 // Upload the file to s3
-router.post('/upload', upload.single('file'), async (req, res) => {
-    res.header('Access-Control-Allow-Origin', process.env.STARGALLERY_URL || dotenv.parsed.STARGALLERY_URL)
-    res.header('Access-Control-Allow-Methods', 'POST')
-    res.header('Access-Control-Allow-Headers', 'Content-Type')
+// router.post('/upload', upload.single('file'), async (req, res) => {
+//     res.header('Access-Control-Allow-Origin', process.env.STARGALLERY_URL || dotenv.parsed.STARGALLERY_URL)
+//     res.header('Access-Control-Allow-Methods', 'POST')
+//     res.header('Access-Control-Allow-Headers', 'Content-Type')
 
-    // var result = await uploadFile(req.file)
-    // if (result) {
-    //     // await unlinkFile(req.file.path)
-    //     res.json({
-    //         status: "Success"
-    //     })
-    // }
-    // else {
-    //     res.json({
-    //         status: "Error"
-    //     })
-    // }
+//     var result = await uploadFile(req.file)
+//     if (result) {
+//         // await unlinkFile(req.file.path)
+//         res.json({
+//             status: "Success"
+//         })
+//     }
+//     else {
+//         res.json({
+//             status: "Error"
+//         })
+//     }
 
 
-})
+// })
 
 // Extract the file from key
 router.get('/extract', async (req, res) => {
