@@ -35,7 +35,7 @@ router.get('/gallery', async (req, res) => {
 // Upload the file to s3
 router.post('/upload', upload.single('file'), async (req, res) => {
     res.header('Access-Control-Allow-Origin', process.env.STARGALLERY_URL || dotenv.parsed.STARGALLERY_URL)
-    console.log(req.file)
+
     var result = await uploadFile(req.file)
     if (result) {
         await unlinkFile(req.file.path)
@@ -53,13 +53,11 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 // Extract the file from key
 router.get('/extract', async (req, res) => {
     res.header('Access-Control-Allow-Origin', process.env.STARGALLERY_URL || dotenv.parsed.STARGALLERY_URL)
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-    res.header('Access-Control-Allow-Headers', 'Content-Type')
 
     var result = await extractFile(req.query.key)
     if (result) {
         var b64 = Buffer.from(result.Body).toString('base64')
-        var mimeType = 'image/*'
+        var mimeType = 'image/jpeg, image/png'
         var src = `data:${mimeType};base64,${b64}`
 
         res.json({
