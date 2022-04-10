@@ -72,6 +72,4 @@ router.get('/extract', async (req, res) => {
     }
 })
 
-
-
 module.exports = router;
