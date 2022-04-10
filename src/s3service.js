@@ -4,8 +4,8 @@ var fs = require('fs')
 
 var bucketName = process.env.AWS_BUCKET_NAME || dotenv.parsed.AWS_BUCKET_NAME;
 var region = process.env.AWS_BUCKET_REGION || dotenv.parsed.AWS_BUCKET_REGION;
-var accessKeyId = process.env.AWS_ACCESS_KEY_ID || dotenv.parsed.AWS_ACCESS_KEY_ID;
-var secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY || dotenv.parsed.AWS_SECRET_ACCESS_KEY;
+var accessKeyId = process.env.AWS_ACCESS_KEY_ID_STARGALLERY || dotenv.parsed.AWS_ACCESS_KEY_ID_STARGALLERY;
+var secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY_STARGALLERY || dotenv.parsed.AWS_SECRET_ACCESS_KEY_STARGALLERY;
 
 var s3Obj = new s3({
     region,
