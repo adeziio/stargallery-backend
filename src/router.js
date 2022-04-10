@@ -57,7 +57,7 @@ router.get('/extract', async (req, res) => {
     var result = await extractFile(req.query.key)
     if (result) {
         var b64 = Buffer.from(result.Body).toString('base64')
-        var mimeType = 'image/jpeg, image/png'
+        var mimeType = 'image/*'
         var src = `data:${mimeType};base64,${b64}`
 
         res.json({
