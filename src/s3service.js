@@ -1,13 +1,13 @@
-const s3 = require('aws-sdk/clients/s3')
-const dotenv = require('dotenv').config()
-const fs = require('fs')
+var s3 = require('aws-sdk/clients/s3')
+var dotenv = require('dotenv').config()
+var fs = require('fs')
 
-const bucketName = process.env.AWS_BUCKET_NAME || dotenv.parsed.AWS_BUCKET_NAME;
-const region = process.env.AWS_BUCKET_REGION || dotenv.parsed.AWS_BUCKET_REGION;
-const accessKeyId = process.env.AWS_ACCESS_KEY_ID_STARGALLERY || dotenv.parsed.AWS_ACCESS_KEY_ID_STARGALLERY;
-const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY_STARGALLERY || dotenv.parsed.AWS_SECRET_ACCESS_KEY_STARGALLERY;
+var bucketName = process.env.AWS_BUCKET_NAME || dotenv.parsed.AWS_BUCKET_NAME;
+var region = process.env.AWS_BUCKET_REGION || dotenv.parsed.AWS_BUCKET_REGION;
+var accessKeyId = process.env.AWS_ACCESS_KEY_ID_STARGALLERY || dotenv.parsed.AWS_ACCESS_KEY_ID_STARGALLERY;
+var secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY_STARGALLERY || dotenv.parsed.AWS_SECRET_ACCESS_KEY_STARGALLERY;
 
-const s3Obj = new s3({
+var s3Obj = new s3({
     region,
     accessKeyId,
     secretAccessKey
@@ -15,7 +15,7 @@ const s3Obj = new s3({
 
 // Get all the keys from bucket
 function listAllFiles() {
-    const uploadParams = {
+    var uploadParams = {
         Bucket: bucketName
     }
 
@@ -24,8 +24,8 @@ function listAllFiles() {
 
 // Extract the file from key
 function uploadFile(file) {
-    const fileStream = fs.createReadStream(file.path)
-    const uploadParams = {
+    var fileStream = fs.createReadStream(file.path)
+    var uploadParams = {
         Bucket: bucketName,
         Body: fileStream,
         Key: file.filename
@@ -36,7 +36,7 @@ function uploadFile(file) {
 
 // Upload the file to s3
 function extractFile(key) {
-    const downloadParams = {
+    var downloadParams = {
         Key: key,
         Bucket: bucketName
     }

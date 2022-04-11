@@ -1,21 +1,21 @@
-const express = require('express')
-const router = express.Router()
-const dotenv = require('dotenv').config()
-const multer = require('multer')
-const upload = multer({ dest: '/tmp/uploads' })
-const { listAllFiles, uploadFile, extractFile } = require('./s3service')
-const fs = require('fs')
-const util = require('util')
-const unlinkFile = util.promisify(fs.unlink)
+var express = require('express')
+var router = express.Router()
+var dotenv = require('dotenv').config()
+var multer = require('multer')
+var upload = multer({ dest: '/tmp/uploads' })
+var { listAllFiles, uploadFile, extractFile } = require('./s3service')
+var fs = require('fs')
+var util = require('util')
+var unlinkFile = util.promisify(fs.unlink)
 
 // Get all the keys from bucket
 router.get('/gallery', async (req, res) => {
     if (req.headers['stargallery-api-key'] === process.env.STARGALLERY_API_KEY || req.headers['stargallery-api-key'] === dotenv.parsed.STARGALLERY_API_KEY) {
-        const result = await listAllFiles()
+        var result = await listAllFiles()
         if (result) {
-            const contents = result.Contents
-            const list = []
-            for (const i = 0; i < contents.length; i++) {
+            var contents = result.Contents
+            var list = []
+            for (var i = 0; i < contents.length; i++) {
                 list.push(contents[i].Key)
             }
 
@@ -40,7 +40,7 @@ router.get('/gallery', async (req, res) => {
 // Upload the file to s3
 router.post('/upload', upload.single('file'), async (req, res) => {
     if (req.headers['stargallery-api-key'] === process.env.STARGALLERY_API_KEY || req.headers['stargallery-api-key'] === dotenv.parsed.STARGALLERY_API_KEY) {
-        const result = await uploadFile(req.file)
+        var result = await uploadFile(req.file)
         if (result) {
             await unlinkFile(req.file.path)
             res.status(200).json({
@@ -63,11 +63,11 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 // Extract the file from key
 router.get('/extract', async (req, res) => {
     if (req.headers['stargallery-api-key'] === process.env.STARGALLERY_API_KEY || req.headers['stargallery-api-key'] === dotenv.parsed.STARGALLERY_API_KEY) {
-        const result = await extractFile(req.query.key)
+        var result = await extractFile(req.query.key)
         if (result) {
-            const b64 = Buffer.from(result.Body).toString('base64')
-            const mimeType = 'image/*'
-            const src = `data:${mimeType};base64,${b64}`
+            var b64 = Buffer.from(result.Body).toString('base64')
+            var mimeType = 'image/*'
+            var src = `data:${mimeType};base64,${b64}`
 
             res.status(200).json({
                 status: "Success",
