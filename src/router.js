@@ -10,70 +10,79 @@ var unlinkFile = util.promisify(fs.unlink)
 
 // Get all the keys from bucket
 router.get('/gallery', async (req, res) => {
-    res.header('Access-Control-Allow-Origin', process.env.STARGALLERY_URL || dotenv.parsed.STARGALLERY_URL)
-    res.header('Access-Control-Allow-Methods', "GET, POST, DELETE")
-    res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept")
+    if (req.headers['stargallery-api-key'] === process.env.STARGALLERY_API_KEY || req.headers['stargallery-key'] === dotenv.parsed.STARGALLERY_API_KEY) {
+        var result = await listAllFiles()
+        if (result) {
+            var contents = result.Contents
+            var list = []
+            for (var i = 0; i < contents.length; i++) {
+                list.push(contents[i].Key)
+            }
 
-    var result = await listAllFiles()
-    if (result) {
-        var contents = result.Contents
-        var list = []
-        for (var i = 0; i < contents.length; i++) {
-            list.push(contents[i].Key)
+            res.json({
+                status: "Success",
+                gallery: list
+            })
         }
-
-        res.json({
-            status: "Success",
-            gallery: list
-        })
+        else {
+            res.json({
+                status: "Error"
+            })
+        }
     }
     else {
-        res.json({
-            status: "Error"
+        res.status(403).json({
+            error: "Unauthorized Access"
         })
     }
 })
 
 // Upload the file to s3
 router.post('/upload', upload.single('file'), async (req, res) => {
-    res.header('Access-Control-Allow-Origin', process.env.STARGALLERY_URL || dotenv.parsed.STARGALLERY_URL)
-    res.header('Access-Control-Allow-Methods', "GET, POST, DELETE")
-    res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept")
-
-    var result = await uploadFile(req.file)
-    if (result) {
-        await unlinkFile(req.file.path)
-        res.json({
-            status: "Success"
-        })
+    if (req.headers['stargallery-api-key'] === process.env.STARGALLERY_API_KEY || req.headers['stargallery-key'] === dotenv.parsed.STARGALLERY_API_KEY) {
+        var result = await uploadFile(req.file)
+        if (result) {
+            await unlinkFile(req.file.path)
+            res.json({
+                status: "Success"
+            })
+        }
+        else {
+            res.json({
+                status: "Error"
+            })
+        }
     }
     else {
-        res.json({
-            status: "Error"
+        res.status(403).json({
+            error: "Unauthorized Access"
         })
     }
 })
 
 // Extract the file from key
 router.get('/extract', async (req, res) => {
-    res.header('Access-Control-Allow-Origin', process.env.STARGALLERY_URL || dotenv.parsed.STARGALLERY_URL)
-    res.header('Access-Control-Allow-Methods', "GET, POST, DELETE")
-    res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept")
+    if (req.headers['stargallery-api-key'] === process.env.STARGALLERY_API_KEY || req.headers['stargallery-key'] === dotenv.parsed.STARGALLERY_API_KEY) {
+        var result = await extractFile(req.query.key)
+        if (result) {
+            var b64 = Buffer.from(result.Body).toString('base64')
+            var mimeType = 'image/*'
+            var src = `data:${mimeType};base64,${b64}`
 
-    var result = await extractFile(req.query.key)
-    if (result) {
-        var b64 = Buffer.from(result.Body).toString('base64')
-        var mimeType = 'image/*'
-        var src = `data:${mimeType};base64,${b64}`
-
-        res.json({
-            status: "Success",
-            src: src
-        })
+            res.json({
+                status: "Success",
+                src: src
+            })
+        }
+        else {
+            res.json({
+                status: "Error"
+            })
+        }
     }
     else {
-        res.json({
-            status: "Error"
+        res.status(403).json({
+            error: "Unauthorized Access"
         })
     }
 })
