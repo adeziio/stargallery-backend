@@ -19,14 +19,14 @@ router.get('/gallery', async (req, res) => {
                 list.push(contents[i].Key)
             }
 
-            res.json({
+            res.status(200).json({
                 status: "Success",
                 gallery: list
             })
         }
         else {
-            res.json({
-                status: "Error"
+            res.status(200).json({
+                status: "Failed"
             })
         }
     }
@@ -43,13 +43,13 @@ router.post('/upload', upload.single('file'), async (req, res) => {
         var result = await uploadFile(req.file)
         if (result) {
             await unlinkFile(req.file.path)
-            res.json({
+            res.status(200).json({
                 status: "Success"
             })
         }
         else {
-            res.json({
-                status: "Error"
+            res.status(200).json({
+                status: "Failed"
             })
         }
     }
@@ -69,14 +69,14 @@ router.get('/extract', async (req, res) => {
             var mimeType = 'image/*'
             var src = `data:${mimeType};base64,${b64}`
 
-            res.json({
+            res.status(200).json({
                 status: "Success",
                 src: src
             })
         }
         else {
-            res.json({
-                status: "Error"
+            res.status(200).json({
+                status: "Failed"
             })
         }
     }
