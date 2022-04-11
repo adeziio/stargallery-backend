@@ -39,6 +39,23 @@ router.get('/gallery', async (req, res) => {
 
 // Upload the file to s3
 router.post('/upload', upload.single('file'), async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', [
+        'Accept',
+        'Authorization',
+        'Content-Type',
+        'Origin',
+        'X-Requested-With'
+    ].join(', '))
+    res.header('Access-Control-Allow-Methods', [
+        'DELETE',
+        'GET',
+        'HEAD',
+        'OPTIONS',
+        'PATCH',
+        'POST',
+        'PUT'
+    ].join(', '))
     if (req.headers['stargallery-api-key'] === process.env.STARGALLERY_API_KEY || req.headers['stargallery-api-key'] === dotenv.parsed.STARGALLERY_API_KEY) {
         var result = await uploadFile(req.file)
         if (result) {
