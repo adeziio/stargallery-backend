@@ -1,6 +1,5 @@
 var s3 = require('aws-sdk/clients/s3')
 var dotenv = require('dotenv').config()
-var fs = require('fs')
 
 var bucketName = process.env.AWS_BUCKET_NAME || dotenv.parsed.AWS_BUCKET_NAME;
 var region = process.env.AWS_BUCKET_REGION || dotenv.parsed.AWS_BUCKET_REGION;
@@ -24,8 +23,6 @@ function listAllFiles() {
 
 // Extract the file from key
 function uploadFile(file) {
-    var fileStream = fs.createReadStream(file.path)
-
     var uploadParams = {
         Bucket: bucketName,
         Body: fileStream,
