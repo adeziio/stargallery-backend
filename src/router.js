@@ -4,9 +4,9 @@ var dotenv = require('dotenv').config()
 var multer = require('multer')
 var upload = multer({ dest: '/tmp/uploads' })
 var { listAllFiles, uploadFile, extractFile } = require('./s3service')
-var fs = require('fs')
-var util = require('util')
-var unlinkFile = util.promisify(fs.unlink)
+// var fs = require('fs')
+// var util = require('util')
+// var unlinkFile = util.promisify(fs.unlink)
 
 // Get all the keys from bucket
 router.get('/gallery', async (req, res) => {
@@ -47,7 +47,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     if (req.headers['stargallery-api-key'] === process.env.STARGALLERY_API_KEY || req.headers['stargallery-api-key'] === dotenv.parsed.STARGALLERY_API_KEY) {
         var result = await uploadFile(req.file)
         if (result) {
-            await unlinkFile(req.file.path)
+            // await unlinkFile(req.file.path)
             res.status(200).json({
                 status: "Success"
             })
