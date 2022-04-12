@@ -13,14 +13,19 @@ router.get('/gallery', async (req, res) => {
     if (req.headers['stargallery-api-key'] === process.env.STARGALLERY_API_KEY || req.headers['stargallery-api-key'] === dotenv.parsed.STARGALLERY_API_KEY) {
         var result = await listAllFiles()
         if (result) {
-            var contents = result.Contents
+            var keySize = result.KeyCount
+            var contents = result.Contents.sort((a, b) => b.LastModified - a.LastModified)
             var list = []
-            for (var i = 0; i < contents.length; i++) {
-                list.push(contents[i].Key)
+            for (var i = 0; i < keySize; i++) {
+                var date = new Date(contents[i].LastModified);
+                list.push({
+                    key: contents[i].Key,
+                    date: `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+                })
             }
-
             res.status(200).json({
                 status: "Success",
+                size: keySize,
                 gallery: list
             })
         }
@@ -66,12 +71,10 @@ router.get('/extract', async (req, res) => {
         var result = await extractFile(req.query.key)
         if (result) {
             var b64 = Buffer.from(result.Body).toString('base64')
-            var mimeType = 'image/*'
-            var src = `data:${mimeType};base64,${b64}`
 
             res.status(200).json({
                 status: "Success",
-                src: src
+                base64: b64
             })
         }
         else {
