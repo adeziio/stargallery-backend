@@ -45,14 +45,21 @@ router.get('/gallery', async (req, res) => {
 // Upload the file to s3
 router.post('/upload', upload.single('file'), async (req, res) => {
     if (req.headers['stargallery-api-key'] === process.env.STARGALLERY_API_KEY || req.headers['stargallery-api-key'] === dotenv.parsed.STARGALLERY_API_KEY) {
-        var result = await uploadFile(req.file)
-        if (result) {
-            await unlinkFile(req.file.path)
-            res.status(200).json({
-                status: "Success"
-            })
+        try {
+            var result = await uploadFile(req.file)
+            if (result) {
+                await unlinkFile(req.file.path)
+                res.status(200).json({
+                    status: "Success"
+                })
+            }
+            else {
+                res.status(200).json({
+                    status: "Failed"
+                })
+            }
         }
-        else {
+        catch (err) {
             res.status(200).json({
                 status: "Failed"
             })
@@ -68,16 +75,24 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 // Extract the file from key
 router.get('/extract', async (req, res) => {
     if (req.headers['stargallery-api-key'] === process.env.STARGALLERY_API_KEY || req.headers['stargallery-api-key'] === dotenv.parsed.STARGALLERY_API_KEY) {
-        var result = await extractFile(req.query.key)
-        if (result) {
-            var b64 = Buffer.from(result.Body).toString('base64')
+        try {
+            var result = await extractFile(req.query.key)
+            if (result) {
+                var b64 = Buffer.from(result.Body).toString('base64')
 
-            res.status(200).json({
-                status: "Success",
-                base64: b64
-            })
+                res.status(200).json({
+                    status: "Success",
+                    base64: b64,
+                    date: result.LastModified
+                })
+            }
+            else {
+                res.status(200).json({
+                    status: "Failed"
+                })
+            }
         }
-        else {
+        catch (err) {
             res.status(200).json({
                 status: "Failed"
             })
@@ -93,13 +108,20 @@ router.get('/extract', async (req, res) => {
 // Delete the file from key
 router.get('/delete', async (req, res) => {
     if (req.headers['stargallery-api-key'] === process.env.STARGALLERY_API_KEY || req.headers['stargallery-api-key'] === dotenv.parsed.STARGALLERY_API_KEY) {
-        var result = await deleteFile(req.query.key)
-        if (result) {
-            res.status(200).json({
-                status: "Success"
-            })
+        try {
+            var result = await deleteFile(req.query.key)
+            if (result) {
+                res.status(200).json({
+                    status: "Success"
+                })
+            }
+            else {
+                res.status(200).json({
+                    status: "Failed"
+                })
+            }
         }
-        else {
+        catch (err) {
             res.status(200).json({
                 status: "Failed"
             })
