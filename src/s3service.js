@@ -22,7 +22,7 @@ function listAllFiles() {
     return s3Obj.listObjectsV2(uploadParams).promise()
 }
 
-// Extract the file from key
+// Upload the file to s3
 function uploadFile(file) {
     var fileStream = fs.createReadStream(file.path)
     var uploadParams = {
@@ -34,7 +34,7 @@ function uploadFile(file) {
     return s3Obj.upload(uploadParams).promise()
 }
 
-// Upload the file to s3
+// Extract the file from key
 function extractFile(key) {
     var downloadParams = {
         Key: key,
@@ -44,6 +44,17 @@ function extractFile(key) {
     return s3Obj.getObject(downloadParams).promise()
 }
 
+// Delete the file to s3
+function deleteFile(key) {
+    var downloadParams = {
+        Key: key,
+        Bucket: bucketName
+    }
+
+    return s3Obj.deleteObject(downloadParams).promise()
+}
+
 exports.listAllFiles = listAllFiles
 exports.uploadFile = uploadFile
 exports.extractFile = extractFile
+exports.deleteFile = deleteFile

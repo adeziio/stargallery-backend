@@ -3,7 +3,7 @@ var router = express.Router()
 var dotenv = require('dotenv').config()
 var multer = require('multer')
 var upload = multer({ dest: '/tmp/uploads' })
-var { listAllFiles, uploadFile, extractFile } = require('./s3service')
+var { listAllFiles, uploadFile, extractFile, deleteFile } = require('./s3service')
 var fs = require('fs')
 var util = require('util')
 var unlinkFile = util.promisify(fs.unlink)
@@ -75,6 +75,28 @@ router.get('/extract', async (req, res) => {
             res.status(200).json({
                 status: "Success",
                 base64: b64
+            })
+        }
+        else {
+            res.status(200).json({
+                status: "Failed"
+            })
+        }
+    }
+    else {
+        res.status(403).json({
+            error: "Unauthorized Access"
+        })
+    }
+})
+
+// Delete the file from key
+router.get('/delete', async (req, res) => {
+    if (req.headers['stargallery-api-key'] === process.env.STARGALLERY_API_KEY || req.headers['stargallery-api-key'] === dotenv.parsed.STARGALLERY_API_KEY) {
+        var result = await deleteFile(req.query.key)
+        if (result) {
+            res.status(200).json({
+                status: "Success"
             })
         }
         else {
