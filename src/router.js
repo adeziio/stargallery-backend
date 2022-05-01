@@ -79,11 +79,11 @@ router.get('/extract', async (req, res) => {
             var result = await extractFile(req.query.key)
             if (result) {
                 var b64 = Buffer.from(result.Body).toString('base64')
-
+                var date = new Date(result.LastModified);
                 res.status(200).json({
                     status: "Success",
                     base64: b64,
-                    date: result.LastModified
+                    date: `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
                 })
             }
             else {
