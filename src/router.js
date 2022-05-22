@@ -8,6 +8,11 @@ var fs = require('fs')
 var util = require('util')
 var unlinkFile = util.promisify(fs.unlink)
 
+// Default
+router.get('/', (req, res) => {
+    res.status(200).send("Server is online...")
+})
+
 // Get all the keys from bucket
 router.get('/gallery', async (req, res) => {
     if (req.headers['stargallery-api-key'] === process.env.STARGALLERY_API_KEY || req.headers['stargallery-api-key'] === dotenv.parsed.STARGALLERY_API_KEY) {
