@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-var cors = require('cors')
+var cors = require('cors');
 var router = require('./src/router');
 var PORT = process.env.PORT || 8080;
 
